@@ -5,8 +5,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns
-st.write("✅ VERSION NUEVA CARGADA")
-
 
 # Configuración general
 st.set_page_config(
@@ -415,7 +413,6 @@ with tab_sistema:
             break
     
     if col_ciudad_real:
-        st.success(f"✅ Columna de ciudad detectada: {col_ciudad_real}")
         col_ciudad = col_ciudad_real
     else:
         st.warning("⚠️ No se encontró columna explícita de ciudad, usando columna 2 por defecto")
