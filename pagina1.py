@@ -283,237 +283,237 @@ with tab_sistema:
 
     st.subheader("Sistema de Alertas por Árbol de Decisión")
 
-st.subheader("Sistema de Riesgo Académico")
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# ==========================================
-# 1. CARGA DE DATOS
-# ==========================================
-df = pd.read_csv(
-    "Cuestionario motivacion academica.csv",
-    encoding="latin-1"
-)
-
-st.success("✅ Archivo cargado")
-st.write("Filas totales:", len(df))
-
-# ------------------------------------------
-# FILTRO DE CARRERAS UDEC
-# ------------------------------------------
-codigos_udec = [3309, 3310, 3311, 3318, 3303, 3319]
-
-df.rename(columns={df.columns[0]: "Codigo_Carrera"}, inplace=True)
-df["Codigo_Carrera"] = pd.to_numeric(df["Codigo_Carrera"], errors="coerce")
-
-df = df[df["Codigo_Carrera"].isin(codigos_udec)].copy()
-
-st.write("🎓 Filas tras filtrar carreras:", len(df))
-
-# ==========================================
-# 2. DETECCIÓN DE COLUMNAS
-# ==========================================
-def encontrar_columna(df, keywords):
-    for col in df.columns:
-        if all(k.lower() in col.lower() for k in keywords):
-            return col
-    return None
-
-col_reprobadas    = encontrar_columna(df, ["reprob"])
-col_asistencia    = encontrar_columna(df, ["asist"])
-col_participacion = encontrar_columna(df, ["particip"])
-col_motivacion    = encontrar_columna(df, ["motiv"])
-
-st.markdown("### Columnas detectadas")
-st.write({
-    "Reprobadas": col_reprobadas,
-    "Asistencia": col_asistencia,
-    "Participación": col_participacion,
-    "Motivación": col_motivacion
-})
-
-# ==========================================
-# 3. LIMPIEZA
-# ==========================================
-for col in [col_reprobadas, col_asistencia, col_participacion, col_motivacion]:
-    df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
-
-# ==========================================
-# 4. ÁRBOL DE DECISIÓN
-# ==========================================
-def calcular_alerta(row):
-    if row[col_motivacion] <= 2 and row[col_reprobadas] >= 2:
-        return "ALERTA ALTA"
-
-    if row[col_asistencia] <= 3:
-        return "ALERTA PREVENTIVA - Asistencia"
-
-    if row[col_participacion] <= 2:
-        return "ALERTA BAJA - Participación"
-
-    return "Sin Riesgo"
-
-df["Nivel_Riesgo"] = df.apply(calcular_alerta, axis=1)
-
-# ==========================================
-# 5. RESULTADOS NUMÉRICOS
-# ==========================================
-st.subheader("Distribución total de alertas")
-st.dataframe(df["Nivel_Riesgo"].value_counts())
-
-st.subheader("Distribución por carrera y alerta")
-tabla_carrera = (
-    df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
-      .size()
-      .unstack(fill_value=0)
-)
-st.dataframe(tabla_carrera)
-
-# ==========================================
-# 6. GRÁFICO GENERAL
-# ==========================================
-st.subheader("Clasificación general de estudiantes")
-
-fig1, ax1 = plt.subplots(figsize=(10, 6))
-
-sns.countplot(
-    data=df,
-    y="Nivel_Riesgo",
-    order=df["Nivel_Riesgo"].value_counts().index,
-    palette="Reds",
-    ax=ax1
-)
-
-ax1.set_xlabel("Cantidad de Estudiantes")
-ax1.set_ylabel("Nivel de Alerta")
-ax1.grid(axis="x", linestyle="--", alpha=0.5)
-
-st.pyplot(fig1)
-
-# ==========================================
-# 7. GRÁFICO: ALERTAS POR CARRERA
-# ==========================================
-st.subheader("Alertas por carrera")
-
-tabla_alertas = (
-    df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
-      .size()
-      .reset_index(name="Cantidad")
-)
-
-tabla_alertas = tabla_alertas[
-    tabla_alertas["Nivel_Riesgo"] != "Sin Riesgo"
-]
-
-fig2, ax2 = plt.subplots(figsize=(14, 7))
-
-sns.barplot(
-    data=tabla_alertas,
-    x="Codigo_Carrera",
-    y="Cantidad",
-    hue="Nivel_Riesgo",
-    palette={
-        "ALERTA ALTA": "#c0392b",
-        "ALERTA PREVENTIVA - Asistencia": "#f39c12",
-        "ALERTA BAJA - Participación": "#2980b9"
-    },
-    ax=ax2
-)
-
-ax2.set_xlabel("Código de Carrera")
-ax2.set_ylabel("Cantidad de Estudiantes")
-ax2.set_title("Cantidad de Estudiantes por Carrera y Nivel de Alerta")
-ax2.grid(axis="y", linestyle="--", alpha=0.5)
-
-st.pyplot(fig2)
-
-# =================================================
-# TABLA CRUZADA: CIUDAD vs NIVEL DE RIESGO
-# =================================================
-st.subheader("Concentración de Riesgo por Ciudad de Origen")
-
-# Usamos el mismo dataframe de encuesta (df)
-df_encuesta = df.copy()
-
-# ------------------------------------------
-# 1. Búsqueda inteligente de la columna ciudad
-# ------------------------------------------
-col_ciudad_real = None
-for col in df_encuesta.columns:
-    if "ciudad" in col.lower() and "origen" in col.lower():
-        col_ciudad_real = col
-        break
-
-if col_ciudad_real:
-    st.success(f"✅ Columna de ciudad detectada: {col_ciudad_real}")
-    col_ciudad = col_ciudad_real
-else:
-    st.warning("⚠️ No se encontró columna explícita de ciudad, usando columna 2 por defecto")
-    col_ciudad = df_encuesta.columns[1]
-
-# ------------------------------------------
-# 2. Limpieza y normalización
-# ------------------------------------------
-df_encuesta["Ciudad_Norm"] = (
-    df_encuesta[col_ciudad]
-    .astype(str)
-    .str.upper()
-    .str.strip()
-)
-
-df_encuesta["Ciudad_Norm"] = df_encuesta["Ciudad_Norm"].replace({
-    "CONCEPCION": "CONCEPCIÓN",
-    "LOS ANGELES": "LOS ÁNGELES",
-    "SAN PEDRO": "SAN PEDRO DE LA PAZ",
-    "CHILLAN": "CHILLÁN"
-})
-
-# ------------------------------------------
-# 3. Filtro Top 15 ciudades
-# ------------------------------------------
-top_ciudades = df_encuesta["Ciudad_Norm"].value_counts().nlargest(15).index
-df_top_ciudades = df_encuesta[df_encuesta["Ciudad_Norm"].isin(top_ciudades)]
-
-# ------------------------------------------
-# 4. Tabla cruzada
-# ------------------------------------------
-crosstab = pd.crosstab(
-    df_top_ciudades["Ciudad_Norm"],
-    df_top_ciudades["Nivel_Riesgo"]
-)
-
-orden_columnas = [
-    "ALERTA ALTA",
-    "ALERTA PREVENTIVA - Asistencia",
-    "ALERTA BAJA - Participación",
-    "Sin Riesgo"
-]
-
-cols_existentes = [c for c in orden_columnas if c in crosstab.columns]
-crosstab = crosstab[cols_existentes]
-
-st.markdown("### Tabla de Frecuencias")
-st.dataframe(crosstab)
-
-# ------------------------------------------
-# 5. Heatmap
-# ------------------------------------------
-fig3, ax3 = plt.subplots(figsize=(12, 8))
-
-sns.heatmap(
-    crosstab,
-    annot=True,
-    fmt="d",
-    cmap="YlOrRd",
-    linewidths=0.5,
-    ax=ax3
-)
-
-ax3.set_title("Concentración de Riesgo por Ciudad de Origen", fontsize=14)
-ax3.set_xlabel("Nivel de Riesgo")
-ax3.set_ylabel("Ciudad de Origen")
-ax3.set_xticklabels(ax3.get_xticklabels(), rotation=45, ha="right")
-
-st.pyplot(fig3)
+    st.subheader("Sistema de Riesgo Académico")
+    
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # ==========================================
+    # 1. CARGA DE DATOS
+    # ==========================================
+    df = pd.read_csv(
+        "Cuestionario motivacion academica.csv",
+        encoding="latin-1"
+    )
+    
+    st.success("✅ Archivo cargado")
+    st.write("Filas totales:", len(df))
+    
+    # ------------------------------------------
+    # FILTRO DE CARRERAS UDEC
+    # ------------------------------------------
+    codigos_udec = [3309, 3310, 3311, 3318, 3303, 3319]
+    
+    df.rename(columns={df.columns[0]: "Codigo_Carrera"}, inplace=True)
+    df["Codigo_Carrera"] = pd.to_numeric(df["Codigo_Carrera"], errors="coerce")
+    
+    df = df[df["Codigo_Carrera"].isin(codigos_udec)].copy()
+    
+    st.write("🎓 Filas tras filtrar carreras:", len(df))
+    
+    # ==========================================
+    # 2. DETECCIÓN DE COLUMNAS
+    # ==========================================
+    def encontrar_columna(df, keywords):
+        for col in df.columns:
+            if all(k.lower() in col.lower() for k in keywords):
+                return col
+        return None
+    
+    col_reprobadas    = encontrar_columna(df, ["reprob"])
+    col_asistencia    = encontrar_columna(df, ["asist"])
+    col_participacion = encontrar_columna(df, ["particip"])
+    col_motivacion    = encontrar_columna(df, ["motiv"])
+    
+    st.markdown("### Columnas detectadas")
+    st.write({
+        "Reprobadas": col_reprobadas,
+        "Asistencia": col_asistencia,
+        "Participación": col_participacion,
+        "Motivación": col_motivacion
+    })
+    
+    # ==========================================
+    # 3. LIMPIEZA
+    # ==========================================
+    for col in [col_reprobadas, col_asistencia, col_participacion, col_motivacion]:
+        df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+    
+    # ==========================================
+    # 4. ÁRBOL DE DECISIÓN
+    # ==========================================
+    def calcular_alerta(row):
+        if row[col_motivacion] <= 2 and row[col_reprobadas] >= 2:
+            return "ALERTA ALTA"
+    
+        if row[col_asistencia] <= 3:
+            return "ALERTA PREVENTIVA - Asistencia"
+    
+        if row[col_participacion] <= 2:
+            return "ALERTA BAJA - Participación"
+    
+        return "Sin Riesgo"
+    
+    df["Nivel_Riesgo"] = df.apply(calcular_alerta, axis=1)
+    
+    # ==========================================
+    # 5. RESULTADOS NUMÉRICOS
+    # ==========================================
+    st.subheader("Distribución total de alertas")
+    st.dataframe(df["Nivel_Riesgo"].value_counts())
+    
+    st.subheader("Distribución por carrera y alerta")
+    tabla_carrera = (
+        df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
+          .size()
+          .unstack(fill_value=0)
+    )
+    st.dataframe(tabla_carrera)
+    
+    # ==========================================
+    # 6. GRÁFICO GENERAL
+    # ==========================================
+    st.subheader("Clasificación general de estudiantes")
+    
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    
+    sns.countplot(
+        data=df,
+        y="Nivel_Riesgo",
+        order=df["Nivel_Riesgo"].value_counts().index,
+        palette="Reds",
+        ax=ax1
+    )
+    
+    ax1.set_xlabel("Cantidad de Estudiantes")
+    ax1.set_ylabel("Nivel de Alerta")
+    ax1.grid(axis="x", linestyle="--", alpha=0.5)
+    
+    st.pyplot(fig1)
+    
+    # ==========================================
+    # 7. GRÁFICO: ALERTAS POR CARRERA
+    # ==========================================
+    st.subheader("Alertas por carrera")
+    
+    tabla_alertas = (
+        df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
+          .size()
+          .reset_index(name="Cantidad")
+    )
+    
+    tabla_alertas = tabla_alertas[
+        tabla_alertas["Nivel_Riesgo"] != "Sin Riesgo"
+    ]
+    
+    fig2, ax2 = plt.subplots(figsize=(14, 7))
+    
+    sns.barplot(
+        data=tabla_alertas,
+        x="Codigo_Carrera",
+        y="Cantidad",
+        hue="Nivel_Riesgo",
+        palette={
+            "ALERTA ALTA": "#c0392b",
+            "ALERTA PREVENTIVA - Asistencia": "#f39c12",
+            "ALERTA BAJA - Participación": "#2980b9"
+        },
+        ax=ax2
+    )
+    
+    ax2.set_xlabel("Código de Carrera")
+    ax2.set_ylabel("Cantidad de Estudiantes")
+    ax2.set_title("Cantidad de Estudiantes por Carrera y Nivel de Alerta")
+    ax2.grid(axis="y", linestyle="--", alpha=0.5)
+    
+    st.pyplot(fig2)
+    
+    # =================================================
+    # TABLA CRUZADA: CIUDAD vs NIVEL DE RIESGO
+    # =================================================
+    st.subheader("Concentración de Riesgo por Ciudad de Origen")
+    
+    # Usamos el mismo dataframe de encuesta (df)
+    df_encuesta = df.copy()
+    
+    # ------------------------------------------
+    # 1. Búsqueda inteligente de la columna ciudad
+    # ------------------------------------------
+    col_ciudad_real = None
+    for col in df_encuesta.columns:
+        if "ciudad" in col.lower() and "origen" in col.lower():
+            col_ciudad_real = col
+            break
+    
+    if col_ciudad_real:
+        st.success(f"✅ Columna de ciudad detectada: {col_ciudad_real}")
+        col_ciudad = col_ciudad_real
+    else:
+        st.warning("⚠️ No se encontró columna explícita de ciudad, usando columna 2 por defecto")
+        col_ciudad = df_encuesta.columns[1]
+    
+    # ------------------------------------------
+    # 2. Limpieza y normalización
+    # ------------------------------------------
+    df_encuesta["Ciudad_Norm"] = (
+        df_encuesta[col_ciudad]
+        .astype(str)
+        .str.upper()
+        .str.strip()
+    )
+    
+    df_encuesta["Ciudad_Norm"] = df_encuesta["Ciudad_Norm"].replace({
+        "CONCEPCION": "CONCEPCIÓN",
+        "LOS ANGELES": "LOS ÁNGELES",
+        "SAN PEDRO": "SAN PEDRO DE LA PAZ",
+        "CHILLAN": "CHILLÁN"
+    })
+    
+    # ------------------------------------------
+    # 3. Filtro Top 15 ciudades
+    # ------------------------------------------
+    top_ciudades = df_encuesta["Ciudad_Norm"].value_counts().nlargest(15).index
+    df_top_ciudades = df_encuesta[df_encuesta["Ciudad_Norm"].isin(top_ciudades)]
+    
+    # ------------------------------------------
+    # 4. Tabla cruzada
+    # ------------------------------------------
+    crosstab = pd.crosstab(
+        df_top_ciudades["Ciudad_Norm"],
+        df_top_ciudades["Nivel_Riesgo"]
+    )
+    
+    orden_columnas = [
+        "ALERTA ALTA",
+        "ALERTA PREVENTIVA - Asistencia",
+        "ALERTA BAJA - Participación",
+        "Sin Riesgo"
+    ]
+    
+    cols_existentes = [c for c in orden_columnas if c in crosstab.columns]
+    crosstab = crosstab[cols_existentes]
+    
+    st.markdown("### Tabla de Frecuencias")
+    st.dataframe(crosstab)
+    
+    # ------------------------------------------
+    # 5. Heatmap
+    # ------------------------------------------
+    fig3, ax3 = plt.subplots(figsize=(12, 8))
+    
+    sns.heatmap(
+        crosstab,
+        annot=True,
+        fmt="d",
+        cmap="YlOrRd",
+        linewidths=0.5,
+        ax=ax3
+    )
+    
+    ax3.set_title("Concentración de Riesgo por Ciudad de Origen", fontsize=14)
+    ax3.set_xlabel("Nivel de Riesgo")
+    ax3.set_ylabel("Ciudad de Origen")
+    ax3.set_xticklabels(ax3.get_xticklabels(), rotation=45, ha="right")
+    
+    st.pyplot(fig3)
 
