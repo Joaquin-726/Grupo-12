@@ -1,6 +1,3 @@
-# -------------------------------------------------
-# Importaciones
-# -------------------------------------------------
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -11,9 +8,7 @@ import seaborn as sns
 st.write("✅ VERSION NUEVA CARGADA")
 
 
-# -------------------------------------------------
 # Configuración general
-# -------------------------------------------------
 st.set_page_config(
     page_title="Sistema de Alerta de Deserción",
     page_icon="🎓",
@@ -22,18 +17,14 @@ st.set_page_config(
 
 st.title("Sistema de Alerta Temprana de Deserción Estudiantil")
 
-# -------------------------------------------------
 # Barra superior de navegación
-# -------------------------------------------------
 tab_proposito, tab_graficos, tab_sistema = st.tabs([
     "Propósito y Modelo",
     "Gráficos de Análisis",
     "Sistema de Riesgo"
 ])
 
-# =================================================
-# TAB 1 — PROPÓSITO
-# =================================================
+# PROPÓSITO
 with tab_proposito:
 
     st.subheader("Propósito")
@@ -112,9 +103,8 @@ with tab_proposito:
         unsafe_allow_html=True
     )
 
-# =================================================
-# TAB 2 — GRÁFICOS
-# =================================================
+# GRÁFICOS
+
 with tab_graficos:
 
     st.subheader("Gráficos de Análisis de Deserción")
@@ -177,9 +167,6 @@ with tab_sistema:
 
     st.subheader("Sistema de Riesgo: Perfiles Académicos (Clustering)")
 
-    # ------------------------------------------
-    # 1. CARGA DE DATOS
-    # ------------------------------------------
     @st.cache_data
     def load_facultad():
         try:
@@ -205,9 +192,9 @@ with tab_sistema:
         st.error("No se encuentra la columna 'Código Carrera Nacional'")
         st.stop()
 
-    # ------------------------------------------
-    # 2. FILTRO DE CARRERAS
-    # ------------------------------------------
+   
+    # FILTRO DE CARRERAS
+    
     relacion_carreras = [
         (13072, 3309),
         (13069, 3310),
@@ -221,9 +208,8 @@ with tab_sistema:
 
     df_fac = df_fac[df_fac["Código Carrera Nacional"].isin(codigos_nacionales)].copy()
 
-    # ------------------------------------------
-    # 3. LIMPIEZA
-    # ------------------------------------------
+    # LIMPIEZA
+    
     cols_numericas = ["Puntaje Ponderado", "Puntaje NEM", "Puntaje Ranking"]
     for col in cols_numericas:
         df_fac[col] = pd.to_numeric(df_fac[col], errors="coerce")
@@ -238,9 +224,7 @@ with tab_sistema:
         lambda x: "LOCAL (Biobío)" if "BIOBIO" in x else "FORÁNEO (Otras Regiones)"
     )
 
-    # ------------------------------------------
-    # 4. CLUSTERING
-    # ------------------------------------------
+    # CLUSTERING
     def crear_clusters(df, n_clusters=3):
         features = df[["Puntaje NEM", "Puntaje Ranking", "Puntaje Ponderado"]]
         scaler = StandardScaler()
@@ -253,9 +237,7 @@ with tab_sistema:
 
     df_fac = crear_clusters(df_fac)
 
-    # ------------------------------------------
-    # 5. VISUALIZACIÓN
-    # ------------------------------------------
+    # VISUALIZACIÓN
     fig, ax = plt.subplots(figsize=(12, 6))
 
     sns.scatterplot(
@@ -288,9 +270,6 @@ with tab_sistema:
     import matplotlib.pyplot as plt
     import seaborn as sns
     
-    # ==========================================
-    # 1. CARGA DE DATOS
-    # ==========================================
     df = pd.read_csv(
         "Cuestionario motivacion academica.csv",
         encoding="latin-1"
@@ -299,9 +278,7 @@ with tab_sistema:
     st.success("✅ Archivo cargado")
     st.write("Filas totales:", len(df))
     
-    # ------------------------------------------
     # FILTRO DE CARRERAS UDEC
-    # ------------------------------------------
     codigos_udec = [3309, 3310, 3311, 3318, 3303, 3319]
     
     df.rename(columns={df.columns[0]: "Codigo_Carrera"}, inplace=True)
@@ -311,9 +288,8 @@ with tab_sistema:
     
     st.write("🎓 Filas tras filtrar carreras:", len(df))
     
-    # ==========================================
-    # 2. DETECCIÓN DE COLUMNAS
-    # ==========================================
+
+    # DETECCIÓN DE COLUMNAS
     def encontrar_columna(df, keywords):
         for col in df.columns:
             if all(k.lower() in col.lower() for k in keywords):
@@ -333,15 +309,13 @@ with tab_sistema:
         "Motivación": col_motivacion
     })
     
-    # ==========================================
-    # 3. LIMPIEZA
-    # ==========================================
+   
+    # LIMPIEZA
     for col in [col_reprobadas, col_asistencia, col_participacion, col_motivacion]:
         df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
     
-    # ==========================================
-    # 4. ÁRBOL DE DECISIÓN
-    # ==========================================
+
+    # ÁRBOL DE DECISIÓN
     def calcular_alerta(row):
         if row[col_motivacion] <= 2 and row[col_reprobadas] >= 2:
             return "ALERTA ALTA"
@@ -356,9 +330,9 @@ with tab_sistema:
     
     df["Nivel_Riesgo"] = df.apply(calcular_alerta, axis=1)
     
-    # ==========================================
-    # 5. RESULTADOS NUMÉRICOS
-    # ==========================================
+  
+    # RESULTADOS NUMÉRICOS
+ 
     st.subheader("Distribución total de alertas")
     st.dataframe(df["Nivel_Riesgo"].value_counts())
     
@@ -370,9 +344,8 @@ with tab_sistema:
     )
     st.dataframe(tabla_carrera)
     
-    # ==========================================
-    # 6. GRÁFICO GENERAL
-    # ==========================================
+   
+    # GRÁFICO GENERAL
     st.subheader("Clasificación general de estudiantes")
     
     fig1, ax1 = plt.subplots(figsize=(10, 6))
@@ -391,9 +364,8 @@ with tab_sistema:
     
     st.pyplot(fig1)
     
-    # ==========================================
-    # 7. GRÁFICO: ALERTAS POR CARRERA
-    # ==========================================
+  
+    # GRÁFICO: ALERTAS POR CARRERA
     st.subheader("Alertas por carrera")
     
     tabla_alertas = (
@@ -428,17 +400,14 @@ with tab_sistema:
     
     st.pyplot(fig2)
     
-    # =================================================
-    # TABLA CRUZADA: CIUDAD vs NIVEL DE RIESGO
-    # =================================================
+    # CIUDAD vs NIVEL DE RIESGO
     st.subheader("Concentración de Riesgo por Ciudad de Origen")
     
     # Usamos el mismo dataframe de encuesta (df)
     df_encuesta = df.copy()
     
-    # ------------------------------------------
-    # 1. Búsqueda inteligente de la columna ciudad
-    # ------------------------------------------
+ 
+    # Búsqueda inteligente de la columna ciudad
     col_ciudad_real = None
     for col in df_encuesta.columns:
         if "ciudad" in col.lower() and "origen" in col.lower():
@@ -452,9 +421,7 @@ with tab_sistema:
         st.warning("⚠️ No se encontró columna explícita de ciudad, usando columna 2 por defecto")
         col_ciudad = df_encuesta.columns[1]
     
-    # ------------------------------------------
-    # 2. Limpieza y normalización
-    # ------------------------------------------
+    # Limpieza y normalización
     df_encuesta["Ciudad_Norm"] = (
         df_encuesta[col_ciudad]
         .astype(str)
@@ -469,15 +436,12 @@ with tab_sistema:
         "CHILLAN": "CHILLÁN"
     })
     
-    # ------------------------------------------
-    # 3. Filtro Top 15 ciudades
-    # ------------------------------------------
+ 
+    # Filtro Top 15 ciudades
     top_ciudades = df_encuesta["Ciudad_Norm"].value_counts().nlargest(15).index
     df_top_ciudades = df_encuesta[df_encuesta["Ciudad_Norm"].isin(top_ciudades)]
     
-    # ------------------------------------------
-    # 4. Tabla cruzada
-    # ------------------------------------------
+    # Tabla cruzada
     crosstab = pd.crosstab(
         df_top_ciudades["Ciudad_Norm"],
         df_top_ciudades["Nivel_Riesgo"]
@@ -496,9 +460,7 @@ with tab_sistema:
     st.markdown("### Tabla de Frecuencias")
     st.dataframe(crosstab)
     
-    # ------------------------------------------
-    # 5. Heatmap
-    # ------------------------------------------
+    # Heatmap
     fig3, ax3 = plt.subplots(figsize=(12, 8))
     
     sns.heatmap(
