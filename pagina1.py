@@ -143,9 +143,9 @@ with tab_graficos:
 
     fig1 = px.box(
         df,
-        x="Pensando_Abandonar",
+        x="Pensamiento de abandono en escala del 1 al 5",
         y="Motivacion",
-        color="Pensando_Abandonar"
+        color="Pensamiento de abandono en una escala del 1 al 5"
     )
     st.plotly_chart(fig1, use_container_width=True)
 
