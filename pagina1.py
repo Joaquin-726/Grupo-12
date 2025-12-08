@@ -128,13 +128,13 @@ with tab_graficos:
         st.stop()
 
     df = df[[col_motivacion[0], col_abandono[0], col_reprobadas[0]]].copy()
-    df.columns = ["Motivacion", "Pensando_Abandonar", "Reprobadas"]
+    df.columns = ["Motivacion", "Pensamiento de abandono en escala del 1 al 5", "Reprobadas"]
     df = df.dropna()
 
     df["Reprobadas"] = pd.to_numeric(df["Reprobadas"], errors="coerce").fillna(0)
-    df["Pensando_Abandonar"] = df["Pensando_Abandonar"].astype(str).str.strip().str.lower()
+    df["Pensamiento de abandono en escala del 1 al 5"] = df["Pensamiento de abandono en escala del 1 al 5"].astype(str).str.strip().str.lower()
 
-    df["Pensando_Abandonar"] = df["Pensando_Abandonar"].replace({
+    df["Pensamiento de abandono en escala del 1 al 5"] = df["Pensamiento de abandono en escala del 1 al 5"].replace({
         "sí": "si", "si ": "si", "no ": "no", "SI": "si", "NO": "no"
     })
 
