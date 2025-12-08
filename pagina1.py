@@ -128,13 +128,13 @@ with tab_graficos:
         st.stop()
 
     df = df[[col_motivacion[0], col_abandono[0], col_reprobadas[0]]].copy()
-    df.columns = ["Motivacion", "Pensamiento de abandono en escala del 1 al 5", "Reprobadas"]
+    df.columns = ["Motivacion", "Pensamiento_de_abandono_en_escala_del_1_al_5", "Reprobadas"]
     df = df.dropna()
 
     df["Reprobadas"] = pd.to_numeric(df["Reprobadas"], errors="coerce").fillna(0)
-    df["Pensamiento de abandono en escala del 1 al 5"] = df["Pensamiento de abandono en escala del 1 al 5"].astype(str).str.strip().str.lower()
+    df["Pensamiento_de_abandono_en_escala_del_1_al_5"] = df["Pensamiento_de_abandono_en_escala_del_1_al_5"].astype(str).str.strip().str.lower()
 
-    df["Pensamiento de abandono en escala del 1 al 5"] = df["Pensamiento de abandono en escala del 1 al 5"].replace({
+    df["Pensamiento_de_abandono_en_escala_del_1_al_5"] = df["Pensamiento_de_abandono_en_escala_del_1_al_5"].replace({
         "sí": "si", "si ": "si", "no ": "no", "SI": "si", "NO": "no"
     })
 
@@ -143,9 +143,9 @@ with tab_graficos:
 
     fig1 = px.box(
         df,
-        x="Pensamiento de abandono en escala del 1 al 5",
+        x="Pensamiento_de_abandono_en_escala_del_1_al_5",
         y="Motivacion",
-        color="Pensamiento de abandono en una escala del 1 al 5"
+        color="Pensamiento_de_abandono_en_escala_del_1_al_5"
     )
     st.plotly_chart(fig1, use_container_width=True)
 
