@@ -275,7 +275,7 @@ with tab_sistema:
         encoding="latin-1"
     )
     
-    st.success("✅ Archivo cargado")
+    
     st.write("Filas totales:", len(df))
     
     # FILTRO DE CARRERAS UDEC
