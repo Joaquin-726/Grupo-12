@@ -85,7 +85,7 @@ with tab_proposito:
     )
 
     with col2:
-        st.image("proposito.jpg", use_container_width=True)
+        st.image("proposito.jpeg", use_container_width=True)
 
     st.subheader("Flujo del árbol de decisión")
 
