@@ -331,16 +331,16 @@ with tab_sistema:
   
     # RESULTADOS NUMÉRICOS
  
-    st.subheader("Distribución total de alertas")
-    (df["Nivel_Riesgo"].value_counts())
+    #st.subheader("Distribución total de alertas")
+    #st.dataframe(df["Nivel_Riesgo"].value_counts())
     
-    st.subheader("Distribución por carrera y alerta")
-    tabla_carrera = (
-        df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
-          .size()
-          .unstack(fill_value=0)
-    )
-    st.dataframe(tabla_carrera)
+    #st.subheader("Distribución por carrera y alerta")
+    #tabla_carrera = (
+    #   df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
+    #      .size()
+    #      .unstack(fill_value=0)
+    #)
+    #st.dataframe(tabla_carrera)
     
    
     # GRÁFICO GENERAL
@@ -454,8 +454,8 @@ with tab_sistema:
     cols_existentes = [c for c in orden_columnas if c in crosstab.columns]
     crosstab = crosstab[cols_existentes]
     
-    st.markdown("### Tabla de Frecuencias")
-    st.dataframe(crosstab)
+    #st.markdown("### Tabla de Frecuencias")
+    #st.dataframe(crosstab)
     
     # Heatmap
     fig3, ax3 = plt.subplots(figsize=(12, 8))
