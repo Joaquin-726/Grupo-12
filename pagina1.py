@@ -332,7 +332,7 @@ with tab_sistema:
     # RESULTADOS NUMÉRICOS
  
     st.subheader("Distribución total de alertas")
-    st.dataframe(df["Nivel_Riesgo"].value_counts())
+    (df["Nivel_Riesgo"].value_counts())
     
     st.subheader("Distribución por carrera y alerta")
     tabla_carrera = (
