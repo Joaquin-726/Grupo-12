@@ -108,7 +108,29 @@ with tab_proposito:
 with tab_graficos:
 
     st.subheader("Gráficos de Análisis de Deserción")
-
+    st.markdown(
+        """
+        Para este análisis, nos enfocamos principalmente en el documento Cuestionario de Motivación.
+        Este contiene las respuestas de los estudiantes cuando se les preguntó
+        sobre su etapa universitaria. Por lo que revisamos los datos, para luego limpiar las
+        variables que nos interesan y así hacer un análisis gráfico, para poder detectar tendencias
+        generales en el abandono de carrera.
+        
+        En esta limpieza hicimos uso de tres columnas principales:
+        --> Motivación por estudiar la carrera
+        --> Pensamiento de abandonar la carrera
+        --> Cantidad de asignaturas reprobadas
+        
+        El primer gráfico que hicimos, compara los niveles de motivación entre quienes han
+        pensado en abandonar y quienes no. Esto a través de un diagrama de caja. Aquí
+        podemos observar que quienes estaban pensando en dejar la carrera, tenían un nivel de
+        motivación más bajo. Lo que se concluye como una relación directa entre las variables.
+        En el segundo gráfico, observamos el promedio de motivación en base a las asignaturas
+        reprobadas. Donde se observó que, mientras que el número de asignaturas reprobadas
+        aumenta, la motivación del estudiante baja. Por lo que el rendimiento del estudiante es
+        un factor a considerar dentro del sistema de alerta
+        """
+    )
     @st.cache_data
     def load_data():
         df = pd.read_csv(
