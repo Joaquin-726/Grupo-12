@@ -606,3 +606,25 @@ with tab_sistema:
             """
         )
 
+
+
+    st.subheader('Conclusion')
+
+    st.markdown(
+        """
+        De este modo, se logra construir un sistema de alerta temprana que incorpora datos contextuales,
+        de comportamiento y académicos de los alumnos, a partir de los gráficos mostrados previamente.
+        
+        Este sistema no se centra en analizar casos individuales de manera aislada, ni espera a que se produzcan
+        fracasos académicos para alertar; más bien, es una herramienta de ayuda que posibilita la detección de patrones
+        de riesgo y señales tempranas de eventual abandono.
+        
+        
+        Así, el análisis posibilita orientar la toma de decisiones preventivas, como el seguimiento de la asistencia
+        y la participación en las clases, así como el acompañamiento académico, dando prioridad a los recursos en aquellos
+        grupos y contextos donde hay mayor riesgo.  Esto favorece que el riesgo de deserción en la universidad sea administrado
+        de manera más proactiva y efectiva.
+        """
+    )
+
+
