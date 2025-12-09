@@ -315,7 +315,7 @@ with tab_sistema:
 
     st.subheader("Sistema de Alertas por Árbol de Decisión")
 
-    st.subheader("Sistema de Riesgo Académico")
+    st.subheader("")
     
     import matplotlib.pyplot as plt
     import seaborn as sns
@@ -351,13 +351,13 @@ with tab_sistema:
     col_participacion = encontrar_columna(df, ["particip"])
     col_motivacion    = encontrar_columna(df, ["motiv"])
     
-    st.markdown("### Columnas detectadas")
-    st.write({
-        "Reprobadas": col_reprobadas,
-        "Asistencia": col_asistencia,
-        "Participación": col_participacion,
-        "Motivación": col_motivacion
-    })
+    #st.markdown("Columnas detectadas")
+    #st.write({
+    #   "Reprobadas": col_reprobadas,
+    #    "Asistencia": col_asistencia,
+    #    "Participación": col_participacion,
+    #    "Motivación": col_motivacion
+    #})
     
    
     # LIMPIEZA
@@ -608,7 +608,7 @@ with tab_sistema:
 
 
     st.subheader(' ')
-    st.subheader('Conclusion')
+    st.subheader('Conclusión')
     st.markdown(' ')
     st.markdown(
         """
