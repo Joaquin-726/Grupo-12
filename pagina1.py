@@ -117,8 +117,11 @@ with tab_graficos:
         generales en el abandono de carrera.
         
         En esta limpieza hicimos uso de tres columnas principales:
+        
         --> Motivación por estudiar la carrera
+        
         --> Pensamiento de abandonar la carrera
+        
         --> Cantidad de asignaturas reprobadas
         
         El primer gráfico que hicimos, compara los niveles de motivación entre quienes han
