@@ -291,7 +291,7 @@ with tab_sistema:
     with column2:
         st.markdown(
             """
-            Grafico cluster: Lo primero que vemos en el sistema de riesgo, es un clustering, es decir, un algoritmo de agrupamiento. 
+            Lo primero que vemos en el sistema de riesgo, es un clustering, es decir, un algoritmo de agrupamiento. 
             Esto permite identificar perfiles de estudiantes según sus puntajes de ingreso, considerando Puntaje Nem, Ranking y Ponderado. Además,
             se diferencia según el origen geográfico, siendo los locales nativos de la región del Bío Bío representados con Círculos, y los Foráneos,
             provenientes de otras regiones, representados con Equis.
