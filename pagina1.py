@@ -77,7 +77,7 @@ with tab_proposito:
         st.image("proposito.jpeg", use_container_width=True)
 
     st.subheader("Flujo del árbol de decisión")
-
+    st.markdown(' ')
     st.markdown(
         """
         <div style="font-size:16px; line-height:1.6;">
@@ -609,7 +609,7 @@ with tab_sistema:
 
 
     st.subheader('Conclusion')
-
+    st.markdown(' ')
     st.markdown(
         """
         De este modo, se logra construir un sistema de alerta temprana que incorpora datos contextuales,
