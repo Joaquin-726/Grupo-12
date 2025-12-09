@@ -131,7 +131,7 @@ with tab_graficos:
         En el segundo gráfico, observamos el promedio de motivación en base a las asignaturas
         reprobadas. Donde se observó que, mientras que el número de asignaturas reprobadas
         aumenta, la motivación del estudiante baja. Por lo que el rendimiento del estudiante es
-        un factor a considerar dentro del sistema de alerta
+        un factor a considerar dentro del sistema de alerta.
         """
     )
     @st.cache_data
