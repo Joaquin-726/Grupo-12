@@ -90,10 +90,10 @@ with tab_proposito:
         Si se cumple al menos una, se genera <b>ALERTA ALTA</b>.<br><br>
 
         <b>Baja asistencia:</b>
-        En ausencia de criterios críticos, se genera <b>ALERTA BAJA</b>.<br><br>
+        En ausencia de criterios críticos, se genera <b>ALERTA PREVENTIVA</b>.<br><br>
 
         <b>Baja participación:</b>
-        Último nivel de evaluación, también genera <b>ALERTA BAJA</b>.<br><br>
+        Último nivel de evaluación, se genera <b>ALERTA BAJA</b>.<br><br>
 
         <b>Riesgo bajo:</b>
         No se activa ninguna alerta.
