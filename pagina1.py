@@ -313,7 +313,6 @@ with tab_sistema:
             """
         )
 
-    st.subheader("Sistema de Alertas por Árbol de Decisión")
 
     st.subheader("")
     
@@ -326,7 +325,7 @@ with tab_sistema:
     )
     
     
-    st.write("Filas totales:", len(df))
+    #st.write("Filas totales:", len(df))
     
     # FILTRO DE CARRERAS UDEC
     codigos_udec = [3309, 3310, 3311, 3318, 3303, 3319]
@@ -336,7 +335,7 @@ with tab_sistema:
     
     df = df[df["Codigo_Carrera"].isin(codigos_udec)].copy()
     
-    st.write("🎓 Filas tras filtrar carreras:", len(df))
+    #st.write("🎓 Filas tras filtrar carreras:", len(df))
     
 
     # DETECCIÓN DE COLUMNAS
