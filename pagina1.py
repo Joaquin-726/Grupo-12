@@ -263,30 +263,55 @@ with tab_sistema:
     df_fac = crear_clusters(df_fac)
 
     # VISUALIZACIÓN
-    fig, ax = plt.subplots(figsize=(12, 6))
+    column1, column2 = st.columns([2, 1])
+    with column1:
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-    sns.scatterplot(
-        data=df_fac,
-        x="Puntaje Ranking",
-        y="Puntaje NEM",
-        hue="Cluster",
-        style="Segmento_Geo",
-        palette="viridis",
-        s=80,
-        alpha=0.75,
-        ax=ax
-    )
+        sns.scatterplot(
+            data=df_fac,
+            x="Puntaje Ranking",
+            y="Puntaje NEM",
+            hue="Cluster",
+            style="Segmento_Geo",
+            palette="viridis",
+            s=80,
+            alpha=0.75,
+            ax=ax
+        )
 
-    ax.set_title("Perfiles de Estudiantes según Puntajes y Origen Geográfico")
-    ax.set_xlabel("Puntaje Ranking")
-    ax.set_ylabel("Puntaje NEM")
-    ax.grid(True, linestyle="--", alpha=0.4)
+        ax.set_title("Perfiles de Estudiantes según Puntajes y Origen Geográfico")
+        ax.set_xlabel("Puntaje Ranking")
+        ax.set_ylabel("Puntaje NEM")
+        ax.grid(True, linestyle="--", alpha=0.4)
+    
+        ax.set_xlim(400, df_fac["Puntaje Ranking"].max() + 10)
+        ax.set_ylim(400, df_fac["Puntaje NEM"].max() + 10)
+    
+        st.pyplot(fig)
+    with column2:
+        st.markdown(
+            """
+            Grafico cluster: Lo primero que vemos en el sistema de riesgo, es un clustering, es decir, un algoritmo de agrupamiento. 
+            Esto permite identificar perfiles de estudiantes según sus puntajes de ingreso, considerando Puntaje Nem, Ranking y Ponderado. Además,
+            se diferencia según el origen geográfico, siendo los locales nativos de la región del Bío Bío representados con Círculos, y los Foráneos,
+            provenientes de otras regiones, representados con Equis.
 
-    ax.set_xlim(400, df_fac["Puntaje Ranking"].max() + 10)
-    ax.set_ylim(400, df_fac["Puntaje NEM"].max() + 10)
-
-    st.pyplot(fig)
-
+            Este análisis no busca predecir la deserción, sino entender cómo se distribuyen los perfiles académicos al momento de ingresar a la universidad.
+            Para así observar si existen diferencias estructurales según el origen geográfico. 
+            Se distinguen claramente tres perfiles académicos:
+            
+            Cluster 0: Un grupo con puntajes altos y consistentes, asociado a menor riesgo académico.
+            
+            Cluster 1: Un grupo intermedio, con mayor dispersión.
+            
+            Cluster 2: Un grupo con puntajes más bajos, donde se concentra el riesgo potencial
+            
+            Aquí observamos que los estudiantes foráneos aparecen más dispersos, esto indica mayores diferencias de adaptación académica.
+            
+            Esto permite detectar perfiles de ingreso con mayor vulnerabilidad antes de que aparezcan problemas académicos graves. Es decir,
+            motiva a tener reforzamientos tempranos según el tipo de perfil.
+            """
+        )
 
     st.subheader("Sistema de Alertas por Árbol de Decisión")
 
