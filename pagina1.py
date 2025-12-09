@@ -437,39 +437,71 @@ with tab_sistema:
        
   
     # GRÁFICO: ALERTAS POR CARRERA
+
     st.subheader("Alertas por carrera")
-    
-    tabla_alertas = (
-        df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
-          .size()
-          .reset_index(name="Cantidad")
-    )
-    
-    tabla_alertas = tabla_alertas[
-        tabla_alertas["Nivel_Riesgo"] != "Sin Riesgo"
-    ]
-    
-    fig2, ax2 = plt.subplots(figsize=(14, 7))
-    
-    sns.barplot(
-        data=tabla_alertas,
-        x="Codigo_Carrera",
-        y="Cantidad",
-        hue="Nivel_Riesgo",
-        palette={
-            "ALERTA ALTA": "#c0392b",
-            "ALERTA PREVENTIVA - Asistencia": "#f39c12",
-            "ALERTA BAJA - Participación": "#2980b9"
-        },
-        ax=ax2
-    )
-    
-    ax2.set_xlabel("Código de Carrera")
-    ax2.set_ylabel("Cantidad de Estudiantes")
-    ax2.set_title("Cantidad de Estudiantes por Carrera y Nivel de Alerta")
-    ax2.grid(axis="y", linestyle="--", alpha=0.5)
-    
-    st.pyplot(fig2)
+
+    pil1, pil2 = st.columns([2, 1])
+
+    with pil1:
+        st.markdown(
+            """
+            3309: Ing. Civil Industrial
+            
+            3310: Ing. Civil 
+            
+            3311: Ing. Civil Eléctrica
+            
+            3318: Ing. Civil Electrónica
+            
+            3303: Ing. Comercial
+            
+            3319: Ing. Civil Informática
+            
+            Este gráfico nos muestra la cantidad de estudiantes en cada nivel de riesgo, según cada carrera. Esto nos permite identificar si existen
+            carreras con una mayor cantidad de estudiantes en riesgo, para así segmentar las medidas y mejorar la gestión académica, junto con la toma
+            de decisiones institucionales. Por lo que, en lugar de evaluar el riesgo de forma aislada, se consigue evaluar la realidad de cada carrera,
+            con el fin de priorizar los recursos. 
+            
+            Observamos que varias carreras presentan una alta concentración de alumnos en alerta baja, lo que interpretamos como la existencia de una
+            cierta carga académica o problemas en cuanto a la metodología de enseñanza. Por otro lado, hay carreras que presentan un mayor número de
+            estudiantes en alerta alta, lo que demuestra que la deserción no es homogénea, por lo que no todas las carreras requieren las mismas estrategias.
+            
+            De esta manera, el sistema de alerta no solo identifica estudiantes en riesgo, sino que también entrega información relevante para el diseño
+            de estrategias preventivas focalizadas. Así se evitan medidas ''genéricas'' que suelen ser poco eficientes.
+            """
+        )
+    with pil2:
+        tabla_alertas = (
+            df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
+              .size()
+              .reset_index(name="Cantidad")
+        )
+        
+        tabla_alertas = tabla_alertas[
+            tabla_alertas["Nivel_Riesgo"] != "Sin Riesgo"
+        ]
+        
+        fig2, ax2 = plt.subplots(figsize=(14, 7))
+        
+        sns.barplot(
+            data=tabla_alertas,
+            x="Codigo_Carrera",
+            y="Cantidad",
+            hue="Nivel_Riesgo",
+            palette={
+                "ALERTA ALTA": "#c0392b",
+                "ALERTA PREVENTIVA - Asistencia": "#f39c12",
+                "ALERTA BAJA - Participación": "#2980b9"
+            },
+            ax=ax2
+        )
+        
+        ax2.set_xlabel("Código de Carrera")
+        ax2.set_ylabel("Cantidad de Estudiantes")
+        ax2.set_title("Cantidad de Estudiantes por Carrera y Nivel de Alerta")
+        ax2.grid(axis="y", linestyle="--", alpha=0.5)
+        
+        st.pyplot(fig2)
     
     # CIUDAD vs NIVEL DE RIESGO
     st.subheader("Concentración de Riesgo por Ciudad de Origen")
