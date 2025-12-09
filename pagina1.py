@@ -417,23 +417,7 @@ with tab_sistema:
         st.pyplot(fig1)
         
     with pilar2:
-                st.markdown(
-            """
-            Este gráfico clasifica a los estudiantes según el nivel de alerta definido en el modelo del sistema de riesgo.
-            Esto a través de un árbol de decisión basado en variables tales como, la motivación, rendimiento académico, asistencia,
-            y participación en clases. 
-
-            Observamos que la gran parte de los alumnos no presenta riesgo, esto es importante ya que indica que el sistema no sobrerreacciona ni clasifica
-            erróneamente a los alumnos. Luego, vemos lo que se puede esperar de un sistema de este tipo, los estudiantes en cada nivel de riesgo disminuyen
-            mientras más alto sea el riesgo. 
-
-            El hecho de considerar la participación y asistencia, muestra que, el riesgo no solo está siempre relacionado directamente con el rendimiento
-            académico, sino con factores conductuales que pueden abordarse mediante apoyo oportuno. Estas son entonces las primeras señales de deserción futura.
-            
-            Con esta información, se puede intervenir antes de que los estudiantes lleguen al punto de reprobar asignaturas, aplicando medidas de bajo costo,
-            como por ejemplo, incitar a la participación en clases.
-            """
-        )
+   
        
   
     # GRÁFICO: ALERTAS POR CARRERA
@@ -443,34 +427,6 @@ with tab_sistema:
     pil1, pil2 = st.columns([2, 1])
 
     with pil1:
-        st.markdown(
-            """
-            3309: Ing. Civil Industrial
-            
-            3310: Ing. Civil 
-            
-            3311: Ing. Civil Eléctrica
-            
-            3318: Ing. Civil Electrónica
-            
-            3303: Ing. Comercial
-            
-            3319: Ing. Civil Informática
-            
-            Este gráfico nos muestra la cantidad de estudiantes en cada nivel de riesgo, según cada carrera. Esto nos permite identificar si existen
-            carreras con una mayor cantidad de estudiantes en riesgo, para así segmentar las medidas y mejorar la gestión académica, junto con la toma
-            de decisiones institucionales. Por lo que, en lugar de evaluar el riesgo de forma aislada, se consigue evaluar la realidad de cada carrera,
-            con el fin de priorizar los recursos. 
-            
-            Observamos que varias carreras presentan una alta concentración de alumnos en alerta baja, lo que interpretamos como la existencia de una
-            cierta carga académica o problemas en cuanto a la metodología de enseñanza. Por otro lado, hay carreras que presentan un mayor número de
-            estudiantes en alerta alta, lo que demuestra que la deserción no es homogénea, por lo que no todas las carreras requieren las mismas estrategias.
-            
-            De esta manera, el sistema de alerta no solo identifica estudiantes en riesgo, sino que también entrega información relevante para el diseño
-            de estrategias preventivas focalizadas. Así se evitan medidas ''genéricas'' que suelen ser poco eficientes.
-            """
-        )
-    with pil2:
         tabla_alertas = (
             df.groupby(["Codigo_Carrera", "Nivel_Riesgo"])
               .size()
@@ -502,6 +458,36 @@ with tab_sistema:
         ax2.grid(axis="y", linestyle="--", alpha=0.5)
         
         st.pyplot(fig2)
+
+    with pil2:
+                st.markdown(
+            """
+            3309: Ing. Civil Industrial
+            
+            3310: Ing. Civil 
+            
+            3311: Ing. Civil Eléctrica
+            
+            3318: Ing. Civil Electrónica
+            
+            3303: Ing. Comercial
+            
+            3319: Ing. Civil Informática
+            
+            Este gráfico nos muestra la cantidad de estudiantes en cada nivel de riesgo, según cada carrera. Esto nos permite identificar si existen
+            carreras con una mayor cantidad de estudiantes en riesgo, para así segmentar las medidas y mejorar la gestión académica, junto con la toma
+            de decisiones institucionales. Por lo que, en lugar de evaluar el riesgo de forma aislada, se consigue evaluar la realidad de cada carrera,
+            con el fin de priorizar los recursos. 
+            
+            Observamos que varias carreras presentan una alta concentración de alumnos en alerta baja, lo que interpretamos como la existencia de una
+            cierta carga académica o problemas en cuanto a la metodología de enseñanza. Por otro lado, hay carreras que presentan un mayor número de
+            estudiantes en alerta alta, lo que demuestra que la deserción no es homogénea, por lo que no todas las carreras requieren las mismas estrategias.
+            
+            De esta manera, el sistema de alerta no solo identifica estudiantes en riesgo, sino que también entrega información relevante para el diseño
+            de estrategias preventivas focalizadas. Así se evitan medidas ''genéricas'' que suelen ser poco eficientes.
+            """
+        )
+        
     
     # CIUDAD vs NIVEL DE RIESGO
     st.subheader("Concentración de Riesgo por Ciudad de Origen")
