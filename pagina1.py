@@ -566,21 +566,43 @@ with tab_sistema:
     #st.dataframe(crosstab)
     
     # Heatmap
-    fig3, ax3 = plt.subplots(figsize=(12, 8))
-    
-    sns.heatmap(
-        crosstab,
-        annot=True,
-        fmt="d",
-        cmap="YlOrRd",
-        linewidths=0.5,
-        ax=ax3
-    )
-    
-    ax3.set_title("Concentración de Riesgo por Ciudad de Origen", fontsize=14)
-    ax3.set_xlabel("Nivel de Riesgo")
-    ax3.set_ylabel("Ciudad de Origen")
-    ax3.set_xticklabels(ax3.get_xticklabels(), rotation=45, ha="right")
-    
-    st.pyplot(fig3)
+    hill1, hill2 = st.columns([2,1])
+    with hill1:
+        fig3, ax3 = plt.subplots(figsize=(12, 8))
+        
+        sns.heatmap(
+            crosstab,
+            annot=True,
+            fmt="d",
+            cmap="YlOrRd",
+            linewidths=0.5,
+            ax=ax3
+        )
+        
+        ax3.set_title("Concentración de Riesgo por Ciudad de Origen", fontsize=14)
+        ax3.set_xlabel("Nivel de Riesgo")
+        ax3.set_ylabel("Ciudad de Origen")
+        ax3.set_xticklabels(ax3.get_xticklabels(), rotation=45, ha="right")
+        
+        st.pyplot(fig3)
+
+    with hill2:
+        st.markdown(
+            """
+            El mapa de calor muestra la distribución del nivel de riesgo según la ciudad de origen de los estudiantes,
+            permitiendo observar patrones geográficos asociados a distintas categorías de alerta.
+
+            Este análisis no busca establecer causalidades ni estigmatizar a los estudiantes por su origen, sino identificar
+            posibles concentraciones que puedan relacionarse con procesos de adaptación, distancia geográfica o diferencias en
+            el contexto previo al ingreso a la universidad.
+            
+            Observamos que ciudades con un gran volumen de estudiantes, concentran naturalmente más casos, con y sin riesgo.
+            Sin embargo, también existen ciudades con una mayor proporción de alertas altas o preventivas. Esto puede reflejar 
+            dificultades de adaptación, traslado, contexto socioeconómico o redes de apoyo.
+            
+            
+            Esta información es crucial para políticas de acompañamiento territorial, como redes de apoyo, tutorías o programas de apoyo 
+            diferenciados para estudiantes foráneos, que deberían tener un seguimiento inicial.
+            """
+        )
 
