@@ -82,6 +82,7 @@ with tab_proposito:
         """
         <div style="font-size:16px; line-height:1.6;">
 
+        
         <b>Inicio:</b> Evaluación del estudiante.<br><br>
 
         <b>Condiciones críticas:</b>
