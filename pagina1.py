@@ -50,7 +50,7 @@ with tab_proposito:
 
         a. El estudiante presenta la consideración de abandonar la carrera.<br>
         b. El estudiante pondera un promedio menor a 4.0.<br>
-        c. El estudiante tiene una o más asignaturas reprobadas.<br>
+        c. El estudiante tiene dos o más asignaturas reprobadas.<br>
 
         <i>Si cualquiera de estos es SÍ, se activa una <b>ALERTA ALTA</b>.</i>
 
@@ -59,7 +59,7 @@ with tab_proposito:
         <b>Jerarquía 2 (Moderado):</b>
         e. El estudiante presenta baja asistencia.<br>
 
-        <i>Si este criterio es SÍ y no existe Jerarquía 3, se activa una <b>ALERTA BAJA</b>.</i>
+        <i>Si este criterio es SÍ y no existe Jerarquía 3, se activa una <b>ALERTA PREVENTIVA</b>.</i>
 
         <br>
 
