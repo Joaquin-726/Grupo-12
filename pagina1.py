@@ -397,23 +397,44 @@ with tab_sistema:
    
     # GRÁFICO GENERAL
     st.subheader("Clasificación general de estudiantes")
-    
-    fig1, ax1 = plt.subplots(figsize=(10, 6))
-    
-    sns.countplot(
-        data=df,
-        y="Nivel_Riesgo",
-        order=df["Nivel_Riesgo"].value_counts().index,
-        palette="Reds",
-        ax=ax1
-    )
-    
-    ax1.set_xlabel("Cantidad de Estudiantes")
-    ax1.set_ylabel("Nivel de Alerta")
-    ax1.grid(axis="x", linestyle="--", alpha=0.5)
-    
-    st.pyplot(fig1)
-    
+
+    pilar1, pilar2 = st.columns([2, 1])
+    with pilar1:
+        st.markdown(
+            """
+            Este gráfico clasifica a los estudiantes según el nivel de alerta definido en el modelo del sistema de riesgo.
+            Esto a través de un árbol de decisión basado en variables tales como, la motivación, rendimiento académico, asistencia,
+            y participación en clases. 
+
+            Observamos que la gran parte de los alumnos no presenta riesgo, esto es importante ya que indica que el sistema no sobrerreacciona ni clasifica
+            erróneamente a los alumnos. Luego, vemos lo que se puede esperar de un sistema de este tipo, los estudiantes en cada nivel de riesgo disminuyen
+            mientras más alto sea el riesgo. 
+
+            El hecho de considerar la participación y asistencia, muestra que, el riesgo no solo está siempre relacionado directamente con el rendimiento
+            académico, sino con factores conductuales que pueden abordarse mediante apoyo oportuno. Estas son entonces las primeras señales de deserción futura.
+            
+            Con esta información, se puede intervenir antes de que los estudiantes lleguen al punto de reprobar asignaturas, aplicando medidas de bajo costo,
+            como por ejemplo, incitar a la participación en clases.
+            """
+        )
+    with pilar2:
+        
+        fig1, ax1 = plt.subplots(figsize=(10, 6))
+        
+        sns.countplot(
+            data=df,
+            y="Nivel_Riesgo",
+            order=df["Nivel_Riesgo"].value_counts().index,
+            palette="Reds",
+            ax=ax1
+        )
+        
+        ax1.set_xlabel("Cantidad de Estudiantes")
+        ax1.set_ylabel("Nivel de Alerta")
+        ax1.grid(axis="x", linestyle="--", alpha=0.5)
+        
+        st.pyplot(fig1)
+        
   
     # GRÁFICO: ALERTAS POR CARRERA
     st.subheader("Alertas por carrera")
